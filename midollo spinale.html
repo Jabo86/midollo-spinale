@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sito sul midollo spinale per l'Operatore Socio-Sanitario (OSS): scopri struttura, funzioni e quiz interattivi.">
+    <meta name="keywords" content="midollo spinale, OSS, nervi spinali, regioni, quiz midollo">
+    <title>Il Midollo Spinale</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #0d1b2a, #1b263b);
+            color: #e0e0e0;
+            overflow-x: hidden;
+            position: relative;
+            font-size: 18px;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/circuit-pattern.png');
+            opacity: 0.05;
+            z-index: -1;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+            position: relative;
+        }
+        header {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 3.5em;
+            color: #00d4ff;
+            text-shadow: 0 0 10px #00d4ff;
+            animation: glow 2s infinite alternate;
+        }
+        header p {
+            margin: 10px 0 0;
+            font-size: 1.2em;
+            color: #ecf0f1;
+        }
+        nav {
+            background: #34495e;
+            padding: 10px 0;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        nav a {
+            color: #ecf0f1;
+            text-decoration: none;
+            margin: 0 20px;
+            font-size: 1.2em;
+            transition: color 0.3s ease;
+        }
+        nav a:hover {
+            color: #3498db;
+        }
+        section {
+            background: rgba(20, 40, 60, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+            margin-bottom: 50px;
+            animation: fadeIn 1.5s ease-in;
+            border: 1px solid #00d4ff;
+        }
+        section h2 {
+            color: #00d4ff;
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 40px;
+            text-shadow: 0 0 5px #00d4ff;
+        }
+        section h3 {
+            color: #00d4ff;
+            font-size: 1.5em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        section p, section ul {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+        section ul {
+            list-style-type: disc;
+            padding-left: 40px;
+        }
+        section ul ul {
+            list-style-type: circle;
+            padding-left: 30px;
+        }
+        .quiz-container {
+            margin-top: 40px;
+            text-align: center;
+        }
+        .quiz-selector {
+            margin-bottom: 20px;
+        }
+        .quiz-selector select {
+            padding: 10px;
+            font-size: 1.2em;
+            background: rgba(30, 50, 70, 0.95);
+            color: #e0e0e0;
+            border: 1px solid #00d4ff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .quiz-timer {
+            font-size: 1.5em;
+            color: #00d4ff;
+            margin-bottom: 20px;
+        }
+        .quiz-balls {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .quiz-ball {
+            width: 40px;
+            height: 40px;
+            background: rgba(30, 50, 70, 0.95);
+            border: 2px solid #00d4ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1em;
+            color: #e0e0e0;
+            transition: background 0.3s ease;
+        }
+        .quiz-ball.correct {
+            background: #00ff00;
+            color: #000;
+            box-shadow: 0 0 10px #00ff00;
+        }
+        .quiz-ball.incorrect {
+            background: #ff0000;
+            color: #000;
+            box-shadow: 0 0 10px #ff0000;
+        }
+        .quiz-question {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #00d4ff;
+        }
+        .quiz-options {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .quiz-option {
+            background: rgba(30, 50, 70, 0.95);
+            padding: 15px 30px;
+            border-radius: 10px;
+            border: 1px solid #00d4ff;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-size: 1.1em;
+        }
+        .quiz-option:hover {
+            background: rgba(0, 212, 255, 0.3);
+        }
+        .quiz-feedback {
+            margin-top: 20px;
+            font-size: 1.2em;
+            display: none;
+        }
+        .correct {
+            color: #00ff00;
+        }
+        .incorrect {
+            color: #ff0000;
+        }
+        .quiz-result {
+            margin-top: 20px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        .retry-button {
+            margin-top: 20px;
+            padding: 15px 30px;
+            background: #00d4ff;
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .retry-button:hover {
+            background: #3498db;
+        }
+        footer {
+            background: #2c3e50;
+            color: #ecf0f1;
+            text-align: center;
+            padding: 20px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+        footer p {
+            margin: 0;
+            font-size: 1em;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes glow {
+            from { text-shadow: 0 0 5px #00d4ff, 0 0 10px #00d4ff; }
+            to { text-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff; }
+        }
+        @media (max-width: 768px) {
+            nav a {
+                display: block;
+                margin: 10px 0;
+            }
+            section {
+                padding: 20px;
+            }
+            header h1 {
+                font-size: 2.5em;
+            }
+            header p {
+                font-size: 1em;
+            }
+            .quiz-options {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .quiz-ball {
+                width: 30px;
+                height: 30px;
+                font-size: 0.8em;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>Il Midollo Spinale</h1>
+        <p>Struttura e Funzioni per l'OSS</p>
+    </header>
+
+    <nav>
+        <a href="#introduzione">Introduzione</a>
+        <a href="#struttura">Struttura</a>
+        <a href="#regioni">Regioni</a>
+        <a href="#funzioni">Funzioni</a>
+        <a href="#quiz">Quiz</a>
+    </nav>
+
+    <div class="container">
+        <section id="introduzione">
+            <h2>Introduzione al Midollo Spinale</h2>
+            <p>Il midollo spinale è la struttura del sistema nervoso centrale che collega il cervello al resto del corpo. È una “rete di distribuzione” che conduce informazioni dal cervello agli organi e porta segnali dall’organismo al cervello.</p>
+        </section>
+
+        <section id="struttura">
+            <h2>Struttura del Midollo Spinale</h2>
+            <p>Il midollo spinale è una colonna di fibre nervose che si estende all’interno della colonna vertebrale. È largo circa 1-1,5 cm e lungo 40-50 cm, dal foro occipitale (forame magno) alla prima o seconda vertebra lombare. È composto da una sostanza bianca esterna (prolungamenti dei neuroni) e una sostanza grigia interna (corpi dei neuroni). È protetto dalla dura madre e dal liquido cerebrospinale.</p>
+        </section>
+
+        <section id="regioni">
+            <h2>Regioni del Midollo Spinale</h2>
+            <p>Il midollo spinale è diviso in quattro regioni:</p>
+            <ul>
+                <li><strong>Cervicale:</strong> Innerva braccia e parte superiore del petto.</li>
+                <li><strong>Toracica:</strong> Innerva petto e addome.</li>
+                <li><strong>Lombare:</strong> Innerva intestino, vescica e gambe.</li>
+                <li><strong>Sacrale:</strong> Innerva la parte inferiore del corpo.</li>
+            </ul>
+            <p>Dalle regioni si dipartono 31 coppie di nervi spinali con fibre motorie e sensoriali. Sotto la seconda vertebra lombare, il midollo si divide nella cauda equina, che esce attraverso i forami neurali.</p>
+        </section>
+
+        <section id="funzioni">
+            <h2>Funzioni del Midollo Spinale</h2>
+            <p>Il midollo spinale connette il cervello al corpo tramite nervi che escono dai forami tra le vertebre. Trasferisce impulsi elettrici dalla periferia al cervello, permettendo la percezione di sensazioni come dolore o temperatura. Danni al midollo causano paralisi o alterazioni sensoriali specifiche in base alla zona colpita.</p>
+        </section>
+
+        <section id="quiz">
+            <h2>Quiz: Testa le Tue Conoscenze sul Midollo Spinale</h2>
+            <p>Seleziona un quiz e rispondi alle 30 domande entro 30 minuti. Le palline si illumineranno man mano che procedi!</p>
+            <div class="quiz-container">
+                <div class="quiz-selector">
+                    <select id="quiz-select" onchange="selectQuiz()">
+                        <option value="0">Seleziona un Quiz</option>
+                        <option value="1">Quiz 1</option>
+                        <option value="2">Quiz 2</option>
+                        <option value="3">Quiz 3</option>
+                        <option value="4">Quiz 4</option>
+                        <option value="5">Quiz 5</option>
+                    </select>
+                </div>
+                <div class="quiz-timer" id="quiz-timer" style="display: none;">Tempo rimanente: 30:00</div>
+                <div class="quiz-balls" id="quiz-balls" style="display: none;"></div>
+                <div class="quiz-question" id="quiz-question"></div>
+                <div class="quiz-options" id="quiz-options"></div>
+                <div class="quiz-feedback" id="quiz-feedback"></div>
+                <div class="quiz-result" id="quiz-result"></div>
+                <button class="retry-button" id="retry-button" style="display: none;">Riprova</button>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>© 2025 Il Midollo Spinale - Tutti i diritti riservati</p>
+    </footer>
+
+    <script>
+        const allQuestions = [
+            // Quiz 1
+            [
+                { question: "Quale sistema include il midollo spinale?", options: ["Sistema nervoso centrale", "Sistema nervoso periferico", "Sistema endocrino", "Sistema muscolare"], correct: "Sistema nervoso centrale" },
+                { question: "Cosa collega il midollo spinale al cervello?", options: ["Forame magno", "Cauda equina", "Dura madre", "Nervi spinali"], correct: "Forame magno" },
+                { question: "Quale sostanza del midollo spinale è esterna?", options: ["Sostanza bianca", "Sostanza grigia", "Liquido cerebrospinale", "Dura madre"], correct: "Sostanza bianca" },
+                { question: "Quante regioni ha il midollo spinale?", options: ["Quattro", "Tre", "Cinque", "Sei"], correct: "Quattro" },
+                { question: "Quale regione innerva le braccia?", options: ["Cervicale", "Toracica", "Lombare", "Sacrale"], correct: "Cervicale" },
+                { question: "Quante coppie di nervi spinali ha il midollo?", options: ["31", "12", "24", "8"], correct: "31" },
+                { question: "Dove termina il midollo spinale?", options: ["Prima o seconda vertebra lombare", "Forame magno", "Cauda equina", "Vertebra sacrale"], correct: "Prima o seconda vertebra lombare" },
+                { question: "Quale membrana protegge il midollo spinale?", options: ["Dura madre", "Aracnoide", "Pia madre", "Corteccia"], correct: "Dura madre" },
+                { question: "Quale struttura si forma sotto la seconda vertebra lombare?", options: ["Cauda equina", "Forame magno", "Sostanza grigia", "Nervi toracici"], correct: "Cauda equina" },
+                { question: "Quale funzione ha il midollo spinale?", options: ["Connettere cervello e corpo", "Produrre ormoni", "Regolare la temperatura", "Filtrare il sangue"], correct: "Connettere cervello e corpo" },
+                { question: "Quali fibre trasferiscono impulsi motori?", options: ["Fibre motorie", "Fibre sensoriali", "Fibre bianche", "Fibre grigie"], correct: "Fibre motorie" },
+                { question: "Quale regione innerva l’addome?", options: ["Toracica", "Cervicale", "Lombare", "Sacrale"], correct: "Toracica" },
+                { question: "Dove si trovano i forami neurali?", options: ["Tra le vertebre", "Nel cranio", "Nella cauda equina", "Nella dura madre"], correct: "Tra le vertebre" },
+                { question: "Quale sensazione è percepita tramite il midollo spinale?", options: ["Dolore", "Gusto", "Olfatto", "Vista"], correct: "Dolore" },
+                { question: "Cosa contiene la sostanza grigia del midollo?", options: ["Corpi dei neuroni", "Prolungamenti dei neuroni", "Liquido cerebrospinale", "Dura madre"], correct: "Corpi dei neuroni" },
+                { question: "Quale regione innerva la vescica?", options: ["Lombare", "Cervicale", "Toracica", "Sacrale"], correct: "Lombare" },
+                { question: "Quale danno al midollo causa paralisi alle gambe?", options: ["Danno lombare", "Danno cervicale", "Danno toracico", "Danno sacrale"], correct: "Danno lombare" },
+                { question: "Quale parte del midollo è larga 1-1,5 cm?", options: ["Intera lunghezza", "Sostanza bianca", "Cauda equina", "Forame magno"], correct: "Intera lunghezza" },
+                { question: "Quali nervi escono dai forami?", options: ["Nervi spinali", "Nervi cranici", "Nervi motori", "Nervi sensoriali"], correct: "Nervi spinali" },
+                { question: "Quale regione innerva la parte inferiore del corpo?", options: ["Sacrale", "Cervicale", "Toracica", "Lombare"], correct: "Sacrale" },
+                { question: "Cosa protegge il liquido cerebrospinale nel midollo?", options: ["Dura madre", "Sostanza bianca", "Cauda equina", "Forame magno"], correct: "Dura madre" },
+                { question: "Quale danno al midollo causa formicolio alle gambe?", options: ["Danno lombare", "Danno cervicale", "Danno toracico", "Danno sacrale"], correct: "Danno lombare" },
+                { question: "Quale funzione del midollo trasferisce impulsi al cervello?", options: ["Sensazioni", "Movimento", "Equilibrio", "Respiro"], correct: "Sensazioni" },
+                { question: "Quale regione è vicina al forame magno?", options: ["Cervicale", "Toracica", "Lombare", "Sacrale"], correct: "Cervicale" },
+                { question: "Quale sostanza è interna al midollo spinale?", options: ["Sostanza grigia", "Sostanza bianca", "Liquido cerebrospinale", "Dura madre"], correct: "Sostanza grigia" },
+                { question: "Quale struttura contiene i nervi della parte inferiore?", options: ["Cauda equina", "Forame magno", "Sostanza bianca", "Dura madre"], correct: "Cauda equina" },
+                { question: "Quale regione innerva il petto?", options: ["Toracica", "Cervicale", "Lombare", "Sacrale"], correct: "Toracica" },
+                { question: "Quale danno al midollo causa intorpidimento al piede?", options: ["Danno lombare", "Danno cervicale", "Danno toracico", "Danno sacrale"], correct: "Danno lombare" },
+                { question: "Quali fibre percepiscono la temperatura?", options: ["Fibre sensoriali", "Fibre motorie", "Fibre bianche", "Fibre grigie"], correct: "Fibre sensoriali" },
+                { question: "Quale parte del midollo è lunga 40-50 cm?", options: ["Intera lunghezza", "Sostanza grigia", "Cauda equina", "Forame magno"], correct: "Intera lunghezza" }
+            ],
+            // Quiz 2
+            [
+                { question: "Quale funzione ha il midollo spinale?", options: ["Collegare cervello e corpo", "Produrre sangue", "Regolare il battito", "Filtrare i rifiuti"], correct: "Collegare cervello e corpo" },
+                { question: "Dove si trova il forame magno?", options: ["Base del cranio", "Vertebra lombare", "Cauda equina", "Dura madre"], correct: "Base del cranio" },
+                { question: "Quale sostanza del midollo è composta da prolungamenti?", options: ["Sostanza bianca", "Sostanza grigia", "Liquido cerebrospinale", "Dura madre"], correct: "Sostanza bianca" },
+                { question: "Quale regione innerva l’intestino?", options: ["Lombare", "Cervicale", "Toracica", "Sacrale"], correct: "Lombare" },
+                { question: "Quante coppie di nervi spinali partono dal midollo?", options: ["31", "12", "24", "8"], correct: "31" },
+                { question: "Quale struttura protegge il midollo spinale?", options: ["Dura madre", "Cauda equina", "Sostanza grigia", "Forame magno"], correct: "Dura madre" },
+                { question: "Dove si forma la cauda equina?", options: ["Sotto la seconda vertebra lombare", "Forame magno", "Regione cervicale", "Regione toracica"], correct: "Sotto la seconda vertebra lombare" },
+                { question: "Quali fibre trasferiscono le sensazioni?", options: ["Fibre sensoriali", "Fibre motorie", "Fibre bianche", "Fibre grigie"], correct: "Fibre sensoriali" },
+                { question: "Quale regione innerva la parte superiore del petto?", options: ["Cervicale", "Toracica", "Lombare", "Sacrale"], correct: "Cervicale" },
+                { question: "Quali nervi escono attraverso i forami?", options: ["Nervi spinali", "Nervi cranici", "Nervi motori", "Nervi sensoriali"], correct: "Nervi spinali" },
+                { question: "Quale sensazione è trasferita dal midollo al cervello?", options: ["Temperatura", "Olfatto", "Gusto", "Vista"], correct: "Temperatura" },
+                { question: "Quale regione innerva le gambe?", options: ["Lombare", "Cervicale", "Toracica", "Sacrale"], correct: "Lombare" },
+                { question: "Quale danno al midollo causa paralisi al petto?", options: ["Danno toracico", "Danno cervicale", "Danno lombare", "Danno sacrale"], correct: "Danno toracico" },
+                { question: "Quale parte del midollo è larga circa 1 cm?", options: ["Intera lunghezza", "Sostanza grigia", "Cauda equina", "Forame magno"], correct: "Intera lunghezza" },
+                { question: "Quale sostanza del midollo contiene i corpi dei neuroni?", options: ["Sostanza grigia", "Sostanza bianca", "Liquido cerebrospinale", "Dura madre"], correct: "Sostanza grigia" },
+                { question: "Quale regione innerva la parte inferiore del corpo?", options: ["Sacrale", "Cervicale", "Toracica", "Lombare"], correct: "Sacrale" },
+                { question: "Quale struttura contiene i nervi della cauda equina?", options: ["Colonna vertebrale", "Forame magno", "Sostanza bianca", "Dura madre"], correct: "Colonna vertebrale" },
+                { question: "Quale danno al midollo causa dolore a un dito?", options: ["Danno cervicale", "Danno toracico", "Danno lombare", "Danno sacrale"], correct: "Danno cervicale" },
+                { question: "Quale funzione del midollo trasferisce impulsi motori?", options: ["Movimento", "Sensazioni", "Equilibrio", "Respiro"], correct: "Movimento" },
+                { question: "Quale regione è vicina alla prima vertebra lombare?", options: ["Lombare", "Cervicale", "Toracica", "Sacrale"], correct: "Lombare" },
+                { question: "Quale sostanza è interna al midollo?", options: ["Sostanza grigia", "Sostanza bianca", "Liquido cerebrospinale", "Dura madre"], correct: "Sostanza grigia" },
+                { question: "Quale parte del midollo si divide in fibre inferiori?", options: ["Cauda equina", "Forame magno", "Sostanza bianca", "Dura madre"], correct: "Cauda equina" },
+                { question: "Quale regione innerva l’addome?", options: ["Toracica", "Cervicale", "Lombare", "Sacrale"], correct: "Toracica" },
+                { question: "Quale danno al midollo causa intorpidimento al piede?", options: ["Danno lombare", "Danno cervicale", "Danno toracico", "Danno sacrale"], correct: "Danno lombare" },
+                { question: "Quali fibre percepiscono il dolore?", options: ["Fibre sensoriali", "Fibre motorie", "Fibre bianche", "Fibre grigie"], correct: "Fibre sensoriali" },
+                { question: "Quale parte del midollo è lunga 40-50 cm?", options: ["Intera lunghezza", "Sostanza grigia", "Cauda equina", "Forame magno"], correct: "Intera lunghezza" },
+                { question: "Quale regione innerva le braccia?", options: ["Cervicale", "Toracica", "Lombare", "Sacrale"], correct: "Cervicale" },
+                { question: "Quale struttura protegge il liquido cerebrospinale?", options: ["Dura madre", "Sostanza bianca", "Cauda equina", "Forame magno"], correct: "Dura madre" },
+                { question: "Quale danno al midollo causa paralisi alle braccia?", options: ["Danno cervicale", "Danno toracico", "Danno lombare", "Danno sacrale"], correct: "Danno cervicale" },
+                { question: "Dove si trovano i forami tra le vertebre?", options: ["Colonna vertebrale", "Cranio", "Cauda equina", "Dura madre"], correct: "Colonna vertebrale" }
+            ],
+            // Quiz 3
+            [
+                { question: "Quale sistema nervoso include il midollo spinale?", options: ["Centrale", "Periferico", "Endocrino", "Muscolare"], correct: "Centrale" },
+                { question: "Quale apertura collega il midollo al cervello?", options: ["Forame magno", "Cauda equina", "Dura madre", "Vertebra lombare"], correct: "Forame magno" },
+                { question: "Quale sostanza del midollo è grigia?", options: ["Sostanza grigia", "Sostanza bianca", "Liquido cerebrospinale", "Dura madre"], correct: "Sostanza grigia" },
+                { question: "Quale regione innerva la vescica?", options: ["Lombare", "Cervicale", "Toracica", "Sacrale"], correct: "Lombare" },
+                { question: "Quante coppie di nervi spinali ha il midollo?", options: ["31", "12", "24", "8"], correct: "31" },
+                { question: "Quale membrana circonda il midollo spinale?", options: ["Dura madre", "Aracnoide", "Pia madre", "Corteccia"], correct: "Dura madre" },
+                { question: "Dove termina il midollo spinale?", options: ["Prima o seconda vertebra lombare", "Forame magno", "Cauda equina", "Vertebra sacrale"], correct: "Prima o seconda vertebra lombare" },
+                { question: "Quali fibre trasferiscono impulsi motori?", options: ["Fibre motorie", "Fibre sensoriali", "Fibre bianche", "Fibre grigie"], correct: "Fibre motorie" },
+                { question: "Quale regione innerva il petto?", options: ["Toracica", "Cervicale", "Lombare", "Sacrale"], correct: "Toracica" },
+                { question: "Quali nervi escono dai forami neurali?", options: ["Nervi spinali", "Nervi cranici", "Nervi motori", "Nervi sensoriali"], correct: "Nervi spinali" },
+                { question: "Quale sensazione è percepita tramite il midollo?", options: ["Dolore", "Gusto", "Olfatto", "Vista"], correct: "Dolore" },
+                { question: "Quale regione innerva le gambe?", options: ["Lombare", "Cervicale", "Toracica", "Sacrale"], correct: "Lombare" },
+                { question: "Quale danno al midollo causa paralisi alle braccia?", options: ["Danno cervicale", "Danno toracico", "Danno lombare", "Danno sacrale"], correct: "Danno cervicale" },
+                { question: "Quale parte del midollo è larga 1-1,5 cm?", options: ["Intera lunghezza", "Sostanza grigia", "Cauda equina", "Forame magno"], correct: "Intera lunghezza" },
+                { question: "Quale sostanza contiene i prolungamenti dei neuroni?", options: ["Sostanza bianca", "Sostanza grigia", "Liquido cerebrospinale", "Dura madre"], correct: "Sostanza bianca" },
+                { question: "Quale regione innerva la parte inferiore del corpo?", options: ["Sacrale", "Cervicale", "Toracica", "Lombare"], correct: "Sacrale" },
+                { question: "Quale struttura si forma sotto la seconda vertebra lombare?", options: ["Cauda equina", "Forame magno", "Sostanza bianca", "Dura madre"], correct: "Cauda equina" },
+                { question: "Quale danno al midollo causa formicolio alle gambe?", options: ["Danno lombare", "Danno cervicale", "Danno toracico", "Danno sacrale"], correct: "Danno lombare" },
+                { question: "Quale funzione del midollo trasferisce sensazioni?", options: ["Sensazioni", "Movimento", "Equilibrio", "Respiro"], correct: "Sensazioni" },
+                { question: "Quale regione è vicina al forame magno?", options: ["Cervicale", "Toracica", "Lombare", "Sacrale"], correct: "Cervicale" },
+                { question: "Quale sostanza è esterna al midollo?", options: ["Sostanza bianca", "Sostanza grigia", "Liquido cerebrospinale", "Dura madre"], correct: "Sostanza bianca" },
+                { question: "Quale parte del midollo contiene i nervi inferiori?", options: ["Cauda equina", "Forame magno", "Sostanza grigia", "Dura madre"], correct: "Cauda equina" },
+                { question: "Quale regione innerva l’addome?", options: ["Toracica", "Cervicale", "Lombare", "Sacrale"], correct: "Toracica" },
+                { question: "Quale danno al midollo causa dolore a un dito?", options: ["Danno cervicale", "Danno toracico", "Danno lombare", "Danno sacrale"], correct: "Danno cervicale" },
+                { question: "Quali fibre percepiscono la temperatura?", options: ["Fibre sensoriali", "Fibre motorie", "Fibre bianche", "Fibre grigie"], correct: "Fibre sensoriali" },
+                { question: "Quale parte del midollo è lunga 40-50 cm?", options: ["Intera lunghezza", "Sostanza grigia", "Cauda equina", "Forame magno"], correct: "Intera lunghezza" },
+                { question: "Quale regione innerva le braccia?", options: ["Cervicale", "Toracica", "Lombare", "Sacrale"], correct: "Cervicale" },
+                { question: "Quale struttura protegge il liquido cerebrospinale?", options: ["Dura madre", "Sostanza bianca", "Cauda equina", "Forame magno"], correct: "Dura madre" },
+                { question: "Quale danno al midollo causa paralisi al petto?", options: ["Danno toracico", "Danno cervicale", "Danno lombare", "Danno sacrale"], correct: "Danno toracico" },
+                { question: "Dove si trovano i forami neurali?", options: ["Tra le vertebre", "Nel cranio", "Nella cauda equina", "Nella dura madre"], correct: "Tra le vertebre" }
+            ],
+            // Quiz 4
+            [
+                { question: "Quale funzione ha il midollo spinale?", options: ["Collegare cervello e corpo", "Produrre ormoni", "Regolare la temperatura", "Filtrare il sangue"], correct: "Collegare cervello e corpo" },
+                { question: "Quale apertura è alla base del cranio?", options: ["Forame magno", "Cauda equina", "Dura madre", "Vertebra lombare"], correct: "Forame magno" },
+                { question: "Quale sostanza del midollo è bianca?", options: ["Sostanza bianca", "Sostanza grigia", "Liquido cerebrospinale", "Dura madre"], correct: "Sostanza bianca" },
+                { question: "Quale regione innerva l’intestino?", options: ["Lombare", "Cervicale", "Toracica", "Sacrale"], correct: "Lombare" },
+                { question: "Quante coppie di nervi spinali ha il midollo?", options: ["31", "12", "24", "8"], correct: "31" },
+                { question: "Quale membrana protegge il midollo?", options: ["Dura madre", "Aracnoide", "Pia madre", "Corteccia"], correct: "Dura madre" },
+                { question: "Dove si forma la cauda equina?", options: ["Sotto la seconda vertebra lombare", "Forame magno", "Regione cervicale", "Regione toracica"], correct: "Sotto la seconda vertebra lombare" },
+                { question: "Quali fibre trasferiscono il movimento?", options: ["Fibre motorie", "Fibre sensoriali", "Fibre bianche", "Fibre grigie"], correct: "Fibre motorie" },
+                { question: "Quale regione innerva la parte superiore del petto?", options: ["Cervicale", "Toracica", "Lombare", "Sacrale"], correct: "Cervicale" },
+                { question: "Quali nervi escono dai forami?", options: ["Nervi spinali", "Nervi cranici", "Nervi motori", "Nervi sensoriali"], correct: "Nervi spinali" },
+                { question: "Quale sensazione è trasferita dal midollo?", options: ["Temperatura", "Olfatto", "Gusto", "Vista"], correct: "Temperatura" },
+                { question: "Quale regione innerva le gambe?", options: ["Lombare", "Cervicale", "Toracica", "Sacrale"], correct: "Lombare" },
+                { question: "Quale danno al midollo causa paralisi all’addome?", options: ["Danno toracico", "Danno cervicale", "Danno lombare", "Danno sacrale"], correct: "Danno toracico" },
+                { question: "Quale parte del midollo è larga 1-1,5 cm?", options: ["Intera lunghezza", "Sostanza grigia", "Cauda equina", "Forame magno"], correct: "Intera lunghezza" },
+                { question: "Quale sostanza contiene i corpi dei neuroni?", options: ["Sostanza grigia", "Sostanza bianca", "Liquido cerebrospinale", "Dura madre"], correct: "Sostanza grigia" },
+                { question: "Quale regione innerva la parte inferiore del corpo?", options: ["Sacrale", "Cervicale", "Toracica", "Lombare"], correct: "Sacrale" },
+                { question: "Quale struttura contiene i nervi della cauda equina?", options: ["Colonna vertebrale", "Forame magno", "Sostanza bianca", "Dura madre"], correct: "Colonna vertebrale" },
+                { question: "Quale danno al midollo causa formicolio alle gambe?", options: ["Danno lombare", "Danno cervicale", "Danno toracico", "Danno sacrale"], correct: "Danno lombare" },
+                { question: "Quale funzione del midollo trasferisce impulsi sensoriali?", options: ["Sensazioni", "Movimento", "Equilibrio", "Respiro"], correct: "Sensazioni" },
+                { question: "Quale regione è vicina alla prima vertebra lombare?", options: ["Lombare", "Cervicale", "Toracica", "Sacrale"], correct: "Lombare" },
+                { question: "Quale sostanza è interna al midollo?", options: ["Sostanza grigia", "Sostanza bianca", "Liquido cerebrospinale", "Dura madre"], correct: "Sostanza grigia" },
+                { question: "Quale parte del midollo si divide in fibre inferiori?", options: ["Cauda equina", "Forame magno", "Sostanza bianca", "Dura madre"], correct: "Cauda equina" },
+                { question: "Quale regione innerva il petto?", options: ["Toracica", "Cervicale", "Lombare", "Sacrale"], correct: "Toracica" },
+                { question: "Quale danno al midollo causa intorpidimento al piede?", options: ["Danno lombare", "Danno cervicale", "Danno toracico", "Danno sacrale"], correct: "Danno lombare" },
+                { question: "Quali fibre percepiscono il dolore?", options: ["Fibre sensoriali", "Fibre motorie", "Fibre bianche", "Fibre grigie"], correct: "Fibre sensoriali" },
+                { question: "Quale parte del midollo è lunga 40-50 cm?", options: ["Intera lunghezza", "Sostanza grigia", "Cauda equina", "Forame magno"], correct: "Intera lunghezza" },
+                { question: "Quale regione innerva le braccia?", options: ["Cervicale", "Toracica", "Lombare", "Sacrale"], correct: "Cervicale" },
+                { question: "Quale struttura protegge il liquido cerebrospinale?", options: ["Dura madre", "Sostanza bianca", "Cauda equina", "Forame magno"], correct: "Dura madre" },
+                { question: "Quale danno al midollo causa paralisi alle braccia?", options: ["Danno cervicale", "Danno toracico", "Danno lombare", "Danno sacrale"], correct: "Danno cervicale" },
+                { question: "Dove si trovano i forami tra le vertebre?", options: ["Colonna vertebrale", "Cranio", "Cauda equina", "Dura madre"], correct: "Colonna vertebrale" }
+            ],
+            // Quiz 5
+            [
+                { question: "Quale sistema nervoso include il midollo spinale?", options: ["Centrale", "Periferico", "Endocrino", "Muscolare"], correct: "Centrale" },
+                { question: "Quale apertura collega il midollo al cervello?", options: ["Forame magno", "Cauda equina", "Dura madre", "Vertebra lombare"], correct: "Forame magno" },
+                { question: "Quale sostanza del midollo è grigia?", options: ["Sostanza grigia", "Sostanza bianca", "Liquido cerebrospinale", "Dura madre"], correct: "Sostanza grigia" },
+                { question: "Quale regione innerva la vescica?", options: ["Lombare", "Cervicale", "Toracica", "Sacrale"], correct: "Lombare" },
+                { question: "Quante coppie di nervi spinali partono dal midollo?", options: ["31", "12", "24", "8"], correct: "31" },
+                { question: "Quale membrana circonda il midollo spinale?", options: ["Dura madre", "Aracnoide", "Pia madre", "Corteccia"], correct: "Dura madre" },
+                { question: "Dove termina il midollo spinale?", options: ["Prima o seconda vertebra lombare", "Forame magno", "Cauda equina", "Vertebra sacrale"], correct: "Prima o seconda vertebra lombare" },
+                { question: "Quali fibre trasferiscono impulsi sensoriali?", options: ["Fibre sensoriali", "Fibre motorie", "Fibre bianche", "Fibre grigie"], correct: "Fibre sensoriali" },
+                { question: "Quale regione innerva il petto?", options: ["Toracica", "Cervicale", "Lombare", "Sacrale"], correct: "Toracica" },
+                { question: "Quali nervi escono dai forami neurali?", options: ["Nervi spinali", "Nervi cranici", "Nervi motori", "Nervi sensoriali"], correct: "Nervi spinali" },
+                { question: "Quale sensazione è percepita tramite il midollo?", options: ["Dolore", "Gusto", "Olfatto", "Vista"], correct: "Dolore" },
+                { question: "Quale regione innerva le gambe?", options: ["Lombare", "Cervicale", "Toracica", "Sacrale"], correct: "Lombare" },
+                { question: "Quale danno al midollo causa paralisi alle braccia?", options: ["Danno cervicale", "Danno toracico", "Danno lombare", "Danno sacrale"], correct: "Danno cervicale" },
+                { question: "Quale parte del midollo è larga 1-1,5 cm?", options: ["Intera lunghezza", "Sostanza grigia", "Cauda equina", "Forame magno"], correct: "Intera lunghezza" },
+                { question: "Quale sostanza contiene i prolungamenti dei neuroni?", options: ["Sostanza bianca", "Sostanza grigia", "Liquido cerebrospinale", "Dura madre"], correct: "Sostanza bianca" },
+                { question: "Quale regione innerva la parte inferiore del corpo?", options: ["Sacrale", "Cervicale", "Toracica", "Lombare"], correct: "Sacrale" },
+                { question: "Quale struttura si forma sotto la seconda vertebra lombare?", options: ["Cauda equina", "Forame magno", "Sostanza bianca", "Dura madre"], correct: "Cauda equina" },
+                { question: "Quale danno al midollo causa formicolio alle gambe?", options: ["Danno lombare", "Danno cervicale", "Danno toracico", "Danno sacrale"], correct: "Danno lombare" },
+                { question: "Quale funzione del midollo trasferisce impulsi motori?", options: ["Movimento", "Sensazioni", "Equilibrio", "Respiro"], correct: "Movimento" },
+                { question: "Quale regione è vicina al forame magno?", options: ["Cervicale", "Toracica", "Lombare", "Sacrale"], correct: "Cervicale" },
+                { question: "Quale sostanza è esterna al midollo?", options: ["Sostanza bianca", "Sostanza grigia", "Liquido cerebrospinale", "Dura madre"], correct: "Sostanza bianca" },
+                { question: "Quale parte del midollo contiene i nervi inferiori?", options: ["Cauda equina", "Forame magno", "Sostanza grigia", "Dura madre"], correct: "Cauda equina" },
+                { question: "Quale regione innerva l’addome?", options: ["Toracica", "Cervicale", "Lombare", "Sacrale"], correct: "Toracica" },
+                { question: "Quale danno al midollo causa dolore a un dito?", options: ["Danno cervicale", "Danno toracico", "Danno lombare", "Danno sacrale"], correct: "Danno cervicale" },
+                { question: "Quali fibre percepiscono la temperatura?", options: ["Fibre sensoriali", "Fibre motorie", "Fibre bianche", "Fibre grigie"], correct: "Fibre sensoriali" },
+                { question: "Quale parte del midollo è lunga 40-50 cm?", options: ["Intera lunghezza", "Sostanza grigia", "Cauda equina", "Forame magno"], correct: "Intera lunghezza" },
+                { question: "Quale regione innerva le braccia?", options: ["Cervicale", "Toracica", "Lombare", "Sacrale"], correct: "Cervicale" },
+                { question: "Quale struttura protegge il liquido cerebrospinale?", options: ["Dura madre", "Sostanza bianca", "Cauda equina", "Forame magno"], correct: "Dura madre" },
+                { question: "Quale danno al midollo causa paralisi al petto?", options: ["Danno toracico", "Danno cervicale", "Danno lombare", "Danno sacrale"], correct: "Danno toracico" },
+                { question: "Dove si trovano i forami neurali?", options: ["Tra le vertebre", "Nel cranio", "Nella cauda equina", "Nella dura madre"], correct: "Tra le vertebre" }
+            ]
+        ];
+
+        let currentQuiz = null;
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timeLeft = 30 * 60; // 30 minuti in secondi
+        let timerInterval;
+
+        const ballsContainer = document.getElementById('quiz-balls');
+        for (let i = 1; i <= 30; i++) {
+            const ball = document.createElement('div');
+            ball.className = 'quiz-ball';
+            ball.id = `ball-${i}`;
+            ball.innerText = i;
+            ballsContainer.appendChild(ball);
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                document.getElementById('quiz-timer').innerText = `Tempo rimanente: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    endQuiz();
+                }
+            }, 1000);
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function selectQuiz() {
+            const quizSelect = document.getElementById('quiz-select');
+            const selectedQuiz = parseInt(quizSelect.value);
+            if (selectedQuiz === 0) {
+                document.getElementById('quiz-timer').style.display = 'none';
+                document.getElementById('quiz-balls').style.display = 'none';
+                document.getElementById('quiz-question').innerText = '';
+                document.getElementById('quiz-options').innerHTML = '';
+                document.getElementById('quiz-feedback').style.display = 'none';
+                document.getElementById('quiz-result').innerHTML = '';
+                document.getElementById('retry-button').style.display = 'none';
+                clearInterval(timerInterval);
+                return;
+            }
+
+            currentQuiz = selectedQuiz - 1;
+            resetQuiz();
+        }
+
+        function loadQuizQuestion() {
+            const questionElement = document.getElementById('quiz-question');
+            const optionsElement = document.getElementById('quiz-options');
+            const feedbackElement = document.getElementById('quiz-feedback');
+            const resultElement = document.getElementById('quiz-result');
+            const retryButton = document.getElementById('retry-button');
+
+            if (currentQuestionIndex >= currentQuestions.length) {
+                endQuiz();
+                return;
+            }
+
+            const currentQuestion = currentQuestions[currentQuestionIndex];
+            questionElement.innerText = `Domanda ${currentQuestionIndex + 1}: ${currentQuestion.question}`;
+            optionsElement.innerHTML = '';
+            feedbackElement.style.display = 'none';
+            resultElement.innerHTML = '';
+            retryButton.style.display = 'none';
+
+            const shuffledOptions = shuffleArray([...currentQuestion.options]);
+            shuffledOptions.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'quiz-option';
+                optionElement.innerText = option;
+                optionElement.addEventListener('click', () => checkAnswer(option, currentQuestion.correct));
+                optionsElement.appendChild(optionElement);
+            });
+        }
+
+        function checkAnswer(selected, correct) {
+            const feedbackElement = document.getElementById('quiz-feedback');
+            feedbackElement.style.display = 'block';
+            const currentBall = document.getElementById(`ball-${currentQuestionIndex + 1}`);
+            if (selected === correct) {
+                currentBall.classList.add('correct');
+                feedbackElement.innerText = 'Corretto! Ottimo lavoro!';
+                feedbackElement.className = 'quiz-feedback correct';
+                score++;
+            } else {
+                currentBall.classList.add('incorrect');
+                feedbackElement.innerText = `Sbagliato. La risposta corretta è: ${correct}.`;
+                feedbackElement.className = 'quiz-feedback incorrect';
+            }
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                loadQuizQuestion();
+            }, 1500);
+        }
+
+        function endQuiz() {
+            clearInterval(timerInterval);
+            const questionElement = document.getElementById('quiz-question');
+            const optionsElement = document.getElementById('quiz-options');
+            const feedbackElement = document.getElementById('quiz-feedback');
+            const resultElement = document.getElementById('quiz-result');
+            const timerElement = document.getElementById('quiz-timer');
+            const retryButton = document.getElementBy爀id('retry-button');
+
+            questionElement.innerText = 'Quiz Completato!';
+            optionsElement.innerHTML = '';
+            feedbackElement.style.display = 'none';
+            timerElement.style.display = 'none';
+            retryButton.style.display = 'block';
+
+            if (score >= 21) {
+                resultElement.innerText = `Hai superato il test! Punteggio: ${score}/30`;
+                resultElement.style.color = '#00ff00';
+            } else {
+                resultElement.innerText = `Torna a studiare! Punteggio: ${score}/30`;
+                resultElement.style.color = '#ff0000';
+            }
+        }
+
+        function resetQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            timeLeft = 30 * 60;
+            document.getElementById('quiz-timer').style.display = 'block';
+            document.getElementById('quiz-timer').innerText = 'Tempo rimanente: 30:00';
+            document.getElementById('quiz-balls').style.display = 'flex';
+            document.querySelectorAll('.quiz-ball').forEach(ball => {
+                ball.classList.remove('correct');
+                ball.classList.remove('incorrect');
+            });
+            currentQuestions = shuffleArray([...allQuestions[currentQuiz]]);
+            clearInterval(timerInterval);
+            startTimer();
+            loadQuizQuestion();
+        }
+
+        document.getElementById('retry-button').addEventListener('click', resetQuiz);
+    </script>
+</body>
+</html>
